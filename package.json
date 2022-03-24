@@ -1,0 +1,14 @@
+{
+  "name": "investigate-nest-apps.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dot": "dot -O -Tpng"
+  },
+  "dependencies": {
+    "glob": "^7.2.0",
+    "typescript": "^4.6.2"
+  }
+}
