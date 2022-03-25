@@ -1,14 +1,21 @@
 import fs from "fs";
 
-import { createDotFromProjects } from "./src/graph.js";
+import { createDotFromProjectsWritter } from "./src/graph.js";
+import { createDotFromProjects2Writter } from "./src/graph-02.js";
 import { createPlanningFromProjects } from "./src/planning.js";
 import { createRoutingFromProjects } from "./src/routing.js";
 import { getEnvironmentsFromProjects } from "./src/environments.js";
 import {
   processManyProjects,
-  processOneFile,
+  controllersFromOneFile,
   processOneProject,
 } from "./src/process.js";
+
+function dotWith(callbackWritter, projects, outputPath) {
+  const fileWritter = fs.createWriteStream(outputPath);
+  callbackWritter(projects, fileWritter);
+  fileWritter.close();
+}
 
 function outputAsJson(result, outputPath) {
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2), {
@@ -28,7 +35,18 @@ function executeCommand({ command, pathname, outputPath }) {
       createRoutingFromProjects(processManyProjects(pathname), outputPath);
       break;
     case "projects-dot":
-      createDotFromProjects(processManyProjects(pathname), outputPath);
+      dotWith(
+        createDotFromProjectsWritter,
+        processManyProjects(pathname),
+        outputPath
+      );
+      break;
+    case "projects-dot-02":
+      dotWith(
+        createDotFromProjects2Writter,
+        processManyProjects(pathname),
+        outputPath
+      );
       break;
     case "projects":
       outputAsJson(processManyProjects(pathname), outputPath);
@@ -36,8 +54,8 @@ function executeCommand({ command, pathname, outputPath }) {
     case "project":
       outputAsJson(processOneProject(pathname), outputPath);
       break;
-    case "file":
-      outputAsJson(processOneFile(pathname), outputPath);
+    case "file-controllers":
+      outputAsJson(controllersFromOneFile(pathname), outputPath);
       break;
     default:
       throw new Error("Invalid command: " + command);

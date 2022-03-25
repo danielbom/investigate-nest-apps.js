@@ -4,15 +4,17 @@ import path from "path";
 import typescript from "typescript";
 
 import { getEnvironmentsFromProject } from "./environments.js";
+import { injectablesFromOneFile } from "./injectables.js";
 import {
   extractControllerRoute,
   extractRestRoutes,
+  getTypescriptFiles,
   getDecoratorController,
   getDecoratorName,
   getDecoratorRest,
 } from "./process/_internal.js";
 
-export function processOneFile(filepath, controllers = {}) {
+export function controllersFromOneFile(filepath, controllers = {}) {
   const node = typescript.createSourceFile(
     filepath, // fileName
     fs.readFileSync(filepath, "utf8"), // sourceText
@@ -59,18 +61,28 @@ export function processOneFile(filepath, controllers = {}) {
   return controllers;
 }
 
-export function processOneProject(directory, controllers = {}) {
-  const paths = glob.sync("**/*.ts", {
-    cwd: directory,
-    ignore: ["**/node_modules/**", "**/.git/**", "**/*.spec.ts"],
-  });
-
-  for (const filepath of paths) {
+function applyOnTypescriptProject(callback, directory, data) {
+  getTypescriptFiles(directory).forEach((filepath) => {
     const fullFilepath = path.join(directory, filepath);
-    processOneFile(fullFilepath, controllers);
-  }
+    callback(fullFilepath, data);
+  });
+  return data;
+}
 
-  return controllers;
+export function processOneProject(directory) {
+  return {
+    controllers: applyOnTypescriptProject(
+      controllersFromOneFile,
+      directory,
+      {}
+    ),
+    injectables: applyOnTypescriptProject(
+      injectablesFromOneFile,
+      directory,
+      {}
+    ),
+    environments: Array.from(getEnvironmentsFromProject(directory)),
+  };
 }
 
 export function processManyProjects(directory) {
@@ -82,11 +94,11 @@ export function processManyProjects(directory) {
     paths.map((filepath) => {
       const directoryBase = path.dirname(filepath);
       const projectDirectory = path.join(directory, directoryBase);
-      const value = {
-        controllers: processOneProject(projectDirectory),
-        environments: Array.from(getEnvironmentsFromProject(projectDirectory)),
-      };
-      return [path.basename(directoryBase), value];
+      console.log({ dir: directoryBase });
+      return [
+        path.basename(directoryBase),
+        processOneProject(projectDirectory),
+      ];
     })
   );
 }

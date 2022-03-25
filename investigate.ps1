@@ -14,6 +14,13 @@ switch ($Command)
     echo "[INFO] Create $output.png"
     dot -O -Tpng $output
   }
+  'Generate-Project-Dot-02' {
+    $output = '.\tmp\projects-02.dot'
+    echo "[INFO] Create $output"
+    node .\index.js "projects-dot-02" .. $output
+    echo "[INFO] Create $output.png"
+    dot -O -Tpng $output
+  }
   'Generate-Project-Planning' {
     $output = '.\tmp\projects.md'
     echo "[INFO] Create $output"

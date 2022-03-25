@@ -36,7 +36,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.Identifier:
     case typescript.SyntaxKind.NamespaceExportDeclaration:
     case typescript.SyntaxKind.ImportEqualsDeclaration:
-    case typescript.SyntaxKind.ElementAccessExpression: 
+    case typescript.SyntaxKind.ElementAccessExpression:
     case typescript.SyntaxKind.ImportDeclaration: {
       break;
     }
@@ -46,8 +46,8 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.VariableDeclarationList: {
       return feedEnvironments(node.declarations, environments);
     }
-    case typescript.SyntaxKind.Parameter: 
-    case typescript.SyntaxKind.PropertyAssignment: 
+    case typescript.SyntaxKind.Parameter:
+    case typescript.SyntaxKind.PropertyAssignment:
     case typescript.SyntaxKind.PropertyDeclaration:
     case typescript.SyntaxKind.VariableDeclaration: {
       return feedEnvironments(node.initializer, environments);
@@ -72,7 +72,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.FunctionDeclaration: {
       return feedEnvironments(node.body, environments);
     }
-    case typescript.SyntaxKind.DefaultClause: 
+    case typescript.SyntaxKind.DefaultClause:
     case typescript.SyntaxKind.Block: {
       return feedEnvironments(node.statements, environments);
     }
@@ -140,7 +140,7 @@ function feedEnvironments(node, environments) {
       feedEnvironments(node.block, environments);
       break;
     }
-    case typescript.SyntaxKind.PostfixUnaryExpression: 
+    case typescript.SyntaxKind.PostfixUnaryExpression:
     case typescript.SyntaxKind.PrefixUnaryExpression: {
       return feedEnvironments(node.operand, environments);
     }
@@ -159,7 +159,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.CaseBlock: {
       return feedEnvironments(node.clauses, environments);
     }
-    case typescript.SyntaxKind.WhileStatement: 
+    case typescript.SyntaxKind.WhileStatement:
     case typescript.SyntaxKind.CaseClause: {
       feedEnvironments(node.expression, environments);
       feedEnvironments(node.statements, environments);
@@ -168,7 +168,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.VoidExpression: {
       break;
     }
-    case typescript.SyntaxKind.ForInStatement: 
+    case typescript.SyntaxKind.ForInStatement:
     case typescript.SyntaxKind.ForOfStatement: {
       feedEnvironments(node.initializer, environments);
       feedEnvironments(node.expression, environments);
@@ -189,7 +189,7 @@ function feedEnvironments(node, environments) {
       feedEnvironments(node.children, environments);
       break;
     }
-    case typescript.SyntaxKind.JsxSelfClosingElement: 
+    case typescript.SyntaxKind.JsxSelfClosingElement:
     case typescript.SyntaxKind.JsxOpeningElement: {
       return feedEnvironments(node.attributes, environments);
     }
@@ -199,7 +199,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.JsxAttribute: {
       return feedEnvironments(node.initializer, environments);
     }
-    case typescript.SyntaxKind.JsxSpreadAttribute: 
+    case typescript.SyntaxKind.JsxSpreadAttribute:
     case typescript.SyntaxKind.JsxExpression: {
       return feedEnvironments(node.expression, environments);
     }

@@ -35,7 +35,7 @@ export function createDotFromProjectsWritter(
 
   _println("digraph G {");
   {
-    _println('  compound = true;');
+    _println("  compound = true;");
     _println('  fontname = "Helvetica,Arial,sans-serif";');
     _println('  node [fontname="Helvetica,Arial,sans-serif"];');
     _println('  edge [fontname="Helvetica,Arial,sans-serif"];');
@@ -57,7 +57,9 @@ export function createDotFromProjectsWritter(
           for (const controllerName in project.controllers) {
             const controller = project.controllers[controllerName];
             for (const dependency of controller.dependencies) {
-              _println(`    "${cluster}.${dependency}" -> "${cluster}.${controllerName}";`);
+              _println(
+                `    "${cluster}.${dependency}" -> "${cluster}.${controllerName}";`
+              );
             }
           }
         }
@@ -66,10 +68,4 @@ export function createDotFromProjectsWritter(
     }
   }
   _println("}");
-}
-
-export function createDotFromProjects(projects, outputPath) {
-  const fileWritter = fs.createWriteStream(outputPath);
-  createDotFromProjectsWritter(projects, fileWritter);
-  fileWritter.close();
 }
