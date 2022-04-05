@@ -79,7 +79,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.ParenthesizedExpression:
     case typescript.SyntaxKind.ThrowStatement:
     case typescript.SyntaxKind.ReturnStatement:
-    case typescript.SyntaxKind.TemplateExpression:
+    case typescript.SyntaxKind.TemplateSpan:
     case typescript.SyntaxKind.ExpressionStatement:
     case typescript.SyntaxKind.AwaitExpression:
     case typescript.SyntaxKind.ExportAssignment: {
@@ -103,6 +103,7 @@ function feedEnvironments(node, environments) {
     case typescript.SyntaxKind.ClassDeclaration: {
       return feedEnvironments(node.members, environments);
     }
+    case typescript.SyntaxKind.TemplateExpression:
     case typescript.SyntaxKind.TaggedTemplateExpression: {
       return feedEnvironments(node.templateSpans, environments);
     }
