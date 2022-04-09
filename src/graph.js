@@ -1,5 +1,3 @@
-import fs from "fs";
-
 import { println } from "./core/writter.js";
 
 function hasKeys(obj) {
@@ -69,3 +67,4 @@ export function createDotFromProjectsWritter(
   }
   _println("}");
 }
+

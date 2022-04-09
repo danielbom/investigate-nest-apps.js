@@ -18,6 +18,7 @@ export function injectablesFromOneFile(filepath, injectables = {}) {
       // Injectables
       const decoratorInjectable = getDecoratorInjectable(statement);
       if (decoratorInjectable) {
+        // @ts-ignore
         const className = statement.name.escapedText;
         injectables[className] = {
           dependencies: extractDependencies(statement),
@@ -28,3 +29,4 @@ export function injectablesFromOneFile(filepath, injectables = {}) {
 
   return injectables;
 }
+

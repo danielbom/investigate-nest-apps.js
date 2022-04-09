@@ -1,5 +1,4 @@
 import fs from "fs";
-import glob from "glob";
 import path from "path";
 import typescript from "typescript";
 
@@ -8,7 +7,7 @@ import { injectablesFromOneFile } from "./injectables.js";
 import {
   extractControllerRoute,
   extractRestRoutes,
-  getTypescriptFiles,
+  getTypescriptOrJavascriptFiles,
   getDecoratorController,
   getDecoratorName,
   getDecoratorRest,
@@ -25,6 +24,7 @@ export function controllersFromOneFile(filepath, controllers = {}) {
     const decoratorController = getDecoratorController(statement);
     if (decoratorController) {
       const baseRoute = extractControllerRoute(decoratorController);
+      // @ts-ignore
       const controllerName = statement.name.escapedText;
       controllers[controllerName] = {
         route: baseRoute || "",
@@ -32,6 +32,7 @@ export function controllersFromOneFile(filepath, controllers = {}) {
         dependencies: [],
       };
 
+      // @ts-ignore
       for (const member of statement.members) {
         const decoratorRest = getDecoratorRest(member);
         if (decoratorRest) {
@@ -62,7 +63,7 @@ export function controllersFromOneFile(filepath, controllers = {}) {
 }
 
 function applyOnTypescriptProject(callback, directory, data) {
-  getTypescriptFiles(directory).forEach((filepath) => {
+  getTypescriptOrJavascriptFiles(directory).forEach((filepath) => {
     const fullFilepath = path.join(directory, filepath);
     callback(fullFilepath, data);
   });
@@ -85,18 +86,12 @@ export function processOneProject(directory) {
   };
 }
 
-export function processManyProjects(directory) {
-  const paths = glob.sync("*/package.json", {
-    cwd: directory,
-  });
-
+export function processManyProjects(directories) {
   return Object.fromEntries(
-    paths.map((filepath) => {
-      const directoryBase = path.dirname(filepath);
-      const projectDirectory = path.join(directory, directoryBase);
-      console.log({ dir: directoryBase });
+    directories.map((projectDirectory) => {
+      console.error({ dir: projectDirectory });
       return [
-        path.basename(directoryBase),
+        path.basename(projectDirectory),
         processOneProject(projectDirectory),
       ];
     })
@@ -109,3 +104,4 @@ export function joinProjects(projects) {
     {}
   );
 }
+

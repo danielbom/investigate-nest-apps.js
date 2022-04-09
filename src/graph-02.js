@@ -52,7 +52,7 @@ export function createDotFromProjects2Writter(
 
   _println("digraph G {");
   {
-    _println("  concentrate = true;")
+    _println("  concentrate = true;");
     _println("  compound = true;");
     _println('  fontname = "Helvetica,Arial,sans-serif";');
     _println('  node [fontname="Helvetica,Arial,sans-serif"];');
@@ -114,3 +114,4 @@ export function createDotFromProjects2Writter(
   }
   _println("}");
 }
+

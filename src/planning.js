@@ -1,5 +1,3 @@
-import fs from "fs";
-
 import { println } from "./core/writter.js";
 
 export function createPlanningFromProjectsWritter(
@@ -18,8 +16,3 @@ export function createPlanningFromProjectsWritter(
   }
 }
 
-export function createPlanningFromProjects(projects, outputPath) {
-  const fileWritter = fs.createWriteStream(outputPath);
-  createPlanningFromProjectsWritter(projects, fileWritter);
-  fileWritter.close();
-}

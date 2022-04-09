@@ -3,6 +3,7 @@ import glob from "glob";
 import path from "path";
 import typescript from "typescript";
 
+import { println } from "./core/writter.js";
 import { logKind } from "./process/_internal.js";
 
 function feedEnvironments(node, environments) {
@@ -100,6 +101,7 @@ function feedEnvironments(node, environments) {
       feedEnvironments(node.right, environments);
       break;
     }
+    case typescript.SyntaxKind.ClassExpression:
     case typescript.SyntaxKind.ClassDeclaration: {
       return feedEnvironments(node.members, environments);
     }
@@ -213,24 +215,6 @@ function feedEnvironments(node, environments) {
   }
 }
 
-export function getEnvironmentsFromProjects(directory) {
-  const paths = glob.sync("*/package.json", {
-    cwd: directory,
-  });
-
-  return Object.fromEntries(
-    paths.map((filepath) => {
-      const directoryBase = path.dirname(filepath);
-      const projectDirectory = path.join(directory, directoryBase);
-      console.log({ dir: directoryBase });
-      const value = {
-        environments: Array.from(getEnvironmentsFromProject(projectDirectory)),
-      };
-      return [path.basename(directoryBase), value];
-    })
-  );
-}
-
 export function getEnvironmentsFromProject(directory, environments) {
   if (!environments) environments = new Set();
 
@@ -259,3 +243,27 @@ export function getEnvironmentsFromFile(filepath, environments) {
   }
   return Array.from(environments).sort();
 }
+
+export function createEnvironmentFromProjectsWritter(
+  projects,
+  writter = process.stdout
+) {
+  const _println = (text) => println(text, writter);
+
+  for (const projectName in projects) {
+    _println(projectName);
+    _println();
+
+    const project = projects[projectName];
+    for (const env in project.environments) {
+      _println(`${env}=`);
+    }
+
+    if (project.environments.length === 0) {
+      _println("[no environment variables]");
+    }
+
+    _println();
+  }
+}
+

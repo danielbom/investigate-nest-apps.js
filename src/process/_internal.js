@@ -81,9 +81,15 @@ export function logKind(anyExpression) {
   console.log(typescript.SyntaxKind[anyExpression.kind]);
 }
 
-export function getTypescriptFiles(directory) {
-  return glob.sync("**/*.ts", {
+export function getTypescriptOrJavascriptFiles(directory) {
+  return glob.sync("**/*.{t,j}s", {
     cwd: directory,
-    ignore: ["**/node_modules/**", "**/.git/**", "**/*.spec.ts"],
+    ignore: [
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/*.spec.ts",
+      "**/*.spec.js",
+    ],
   });
 }
+
